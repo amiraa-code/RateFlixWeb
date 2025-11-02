@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <title>Document</title>
 </head>
@@ -17,11 +18,20 @@
         </div>
         <div class="search-bar">
           <form class="search-form">
-            <input type="search" name="search" placeholder="">
+            <input type="search" name="search" placeholder="search...">
+            <input type="submit" name="submit" value="submit">
           </form>
         </div>
       </div>
-      <div class="right-heading"></div>
+      <div class="right-heading">
+        <div class="login-status">
+          <div class="login"><i class="fa-solid fa-arrow-right-to-bracket fa-2x"></i></div>
+          <div class="register"><i class="fa-solid fa-user-plus fa-2x"></i></div>
+          <div class="logout"><i class="fa-solid fa-right-from-bracket fa-2x"></i></div>
+          <div class="logged-user"><i class="fa-solid fa-user-check fa-2x"></i> <span class="username">username</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="navigation"></div>
   </header>
