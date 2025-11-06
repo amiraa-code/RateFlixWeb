@@ -2,19 +2,19 @@
 require './include/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === "GET"){
-   $stmt = "SELECT category_name FROM categories;";
+    //fetch all banners
+   $stmt = "SELECT * FROM banner;";
    if ($result = $conn->query($stmt)) {
     //populating array with rows that hav been returned
     $arr = array();
     while ($row = $result->fetch_assoc()) {
-    $arr[] = $row['category_name'];
+    $arr[] = $row;
     }
 
-    echo json_encode(['category' => $arr]);
+    echo json_encode(['banner' => $arr]);
    } else {
     //send error message
     echo json_encode(['error' => 'Ooopsssyy Spmething went wrong!']);
    }
    exit();
 }
-
