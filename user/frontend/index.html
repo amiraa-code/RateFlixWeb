@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link
@@ -12,36 +13,74 @@
 />
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
- 
+
 <title>RateFlix</title>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#3f1d1d",            
+        primaryLight: "#6b3535",       
+        accent: "#d14b4b",             
+        secondary: "#e2b6b6",          
+      }
+    }
+  }
+}
+</script>
+
 </head>
 
 <body>
-  <header>
-    <div class="heading">
-      <div class="left-heading">
-        <div class="logo">
-          <a href="index.html"><img src="../../images/logo.svg" alt="logo image"></a>
-        </div>
-        <div class="search-bar">
-          <form class="search-form">
-            <input type="search" name="search" placeholder="search...">
-            <input type="submit" name="submit" value="Submit">
-          </form>
-        </div>
-      </div>
-      <div class="right-heading">
-        <div class="login-status">
-          <div class="login"><i class="fa-solid fa-arrow-right-to-bracket fa-2x"></i></div>
-          <div class="register"><i class="fa-solid fa-user-plus fa-2x"></i></div>
-          <div class="logout"><i class="fa-solid fa-right-from-bracket fa-2x"></i></div>
-          <div class="logged-user hidden"><i class="fa-solid fa-user-check fa-2x"></i> <span class="username">username</span>
-          </div>
-        </div>
+<header class="fixed top-0 left-0 right-0 z-50 bg-primary text-white shadow-md">
+  <div class="flex items-center justify-between px-6 h-20">
+
+    
+    <a href="index.html" class="flex items-center gap-2">
+      <img src="../../images/logo.svg" class="h-12 w-auto" alt="RateFlix Logo">
+    </a>
+
+    <!-- Search bar -->
+    <form class="flex items-center bg-white rounded-md overflow-hidden shadow">
+      <input 
+        type="search" 
+        placeholder="Search..."
+        class="px-4 py-2 text-gray-700 outline-none w-56"
+      />
+      <button 
+        type="submit" 
+        class="px-4 py-2 bg-accent text-white font-semibold hover:bg-accent/90"
+      >
+        Search
+      </button>
+    </form>
+
+    <!-- icons -->
+    <div class="flex items-center gap-6 text-2xl">
+
+      <button class="hover:text-secondaryLight" title="Login">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+      </button>
+      
+      <button class="hover:text-secondaryLight" title="Register">
+        <i class="fa-solid fa-user-plus"></i>
+      </button>
+      
+      <button class="hover:text-secondaryLight" title="Logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+
+      <div class="hidden items-center gap-2 text-lg">
+        <i class="fa-solid fa-user-check"></i>
+        <span class="font-medium username">username</span>
       </div>
     </div>
-    <div class="navigation"></div>
-  </header>
+
+  </div>
+</header>
+
+
   <main>
     <section class="banner">
       <div class="swiper">

@@ -1,6 +1,7 @@
 //where rquest will be made
 document.addEventListener('DOMContentLoaded', requestCategories)
 document.addEventListener('DOMContentLoaded', requestBanner)
+document.addEventListener('DOMContentLoaded', requestMovies('Action'))
 function requestCategories(){
     //API
     fetch('/RATEFLIXWEB/user/backend/handler.php', {
@@ -18,7 +19,9 @@ function requestCategories(){
             const li = document.createElement('li');
             li.className = cat;
             li.textContent = cat;
-            // li.addEventListener('click', getCategoryMovies);
+            li.addEventListener('click', () => {
+            requestMovies(cat);
+          });
             ul.appendChild(li);
         });
         nav.append(ul);
@@ -27,7 +30,6 @@ function requestCategories(){
     })
         .catch((err) => console.log(err));
 }
-
 
 function requestBanner(){
     fetch('/RATEFLIXWEB/user/backend/banner.php', {
@@ -73,4 +75,45 @@ function callCarousal (){
     disableoOnInteraction: false
   }
 });
+}
+
+
+function requestMovies(category) {
+  fetch(`/RATEFLIXWEB/user/backend/fetchmovies.php?category=${encodeURIComponent(category)}`)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Movies:", data);
+
+      // Clear any existing movie section
+      const oldSection = document.querySelector('.movie-section');
+      if (oldSection) oldSection.remove();
+
+      // Only proceed if we got movies
+      if (data.status === "ok" && data.movies) {
+        const movieSection = document.createElement('section');
+        movieSection.className = 'movie-section';
+
+        const heading = document.createElement('h2');
+        heading.textContent = `${category} Movies`;
+        movieSection.appendChild(heading);
+
+        const grid = document.createElement('div');
+        grid.className = 'movie-grid';
+
+        data.movies.forEach((movie) => {
+          const card = document.createElement('div');
+          card.className = 'movie-card';
+          card.innerHTML = `
+            <img src="${movie.Poster !== 'N/A' ? movie.Poster : '/rateflixweb/images/placeholder.jpg'}" alt="${movie.Title}">
+            <h3>${movie.Title}</h3>
+            <p>${movie.Year}</p>
+          `;
+          grid.appendChild(card);
+        });
+
+        movieSection.appendChild(grid);
+        document.querySelector('main').appendChild(movieSection);
+      }
+    })
+    .catch((err) => console.error(err));
 }
