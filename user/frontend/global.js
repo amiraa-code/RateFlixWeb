@@ -1,23 +1,26 @@
 //where rquest will be made
 document.addEventListener('DOMContentLoaded', requestCategories)
 document.addEventListener('DOMContentLoaded', requestBanner)
-document.addEventListener('DOMContentLoaded', requestMovies('Action'))
+document.addEventListener('DOMContentLoaded', () => requestMovies('Horror'));
 function requestCategories(){
     //API
     fetch('/RATEFLIXWEB/user/backend/handler.php', {
         method: "GET",
     })
     //passing the promise that have been sent from the srver
-    .then( (response)=> response.json() )
+    .then( (response)=> {
+        if (!response.ok) throw new Error('Network response error');
+        return response.json();
+    } )
     .then((data) => {
       //  console.log(data);
       //displaying categories from dbs to website
       const nav = document.querySelector('.navigation');
-      if(data.category){
+      if(data.categories){
         const ul = document.createElement('ul');
         ul.className = "flex gap-6 text-white text-lg font-semibold";
 
-        data.category.forEach(cat => {
+        data.categories.forEach(cat => {
             const li = document.createElement('li');
             li.className = "cursor-pointer bg-primaryLight px-4 py-2 rounded-full hover:bg-accent transition";
             li.textContent = cat;
@@ -33,40 +36,40 @@ function requestCategories(){
         nav.append(ul);
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error('Categories error:', err));
 }
 
-function requestBanner(){
-    fetch('/RATEFLIXWEB/user/backend/banner.php', {
-        method: "GET",
+// fetch banner from backend
+
+function requestBanner() {
+  fetch('/RATEFLIXWEB/user/backend/banner.php', {
+    method: "GET",
+  })
+    .then((response) => {
+        if (!response.ok) throw new Error('Network response error');
+        return response.json();
     })
-    .then( (response)=> response.json() )
     .then((data) => {
-     console.log('Banner:', data);
-      if(data.banner){
-        const banner = data.banner
-        banner.forEach(banner=>{
-          
-          const slide = document.createElement('div')
+      console.log('Banner:', data);
+      if (data.banner) {
+        const banner = data.banner;
+        banner.forEach(banner => {
+
+          const slide = document.createElement('div');
           slide.className =
             "swiper-slide h-[55vh] bg-cover bg-center flex flex-col justify-end p-8 text-white";
           slide.style.backgroundImage = `url('http://localhost/rateflixweb${banner.image}')`;
 
-          const h3 = document.createElement('h3')
-          h3.textContent=banner.name
+          const h3 = document.createElement('h3');
+          h3.textContent = banner.name;
           h3.className = "text-3xl font-bold mb-2 drop-shadow-lg";
 
-          const p = document.createElement('p')
-          p.textContent=banner.description
+          const p = document.createElement('p');
+          p.textContent = banner.description;
           p.className = "text-lg mb-4 drop-shadow";
 
-          const button = document.createElement('button')
-          button.textContent ='Browse more'
-          button.className = "bg-accent w-fit px-4 py-2 rounded shadow hover:bg-accent/90";
-
-          slide.appendChild(h3)
-          slide.appendChild(p)
-          slide.appendChild(button)
+          slide.appendChild(h3);
+          slide.appendChild(p);
 
           const swiperWrapper = document.querySelector(".swiper-wrapper");
           swiperWrapper.append(slide);
@@ -75,7 +78,7 @@ function requestBanner(){
         callCarousal();
       }
     })
-        .catch((err) => console.log(err));
+    .catch((err) => console.log(err));
 }
 
 function callCarousal (){
@@ -90,11 +93,14 @@ function callCarousal (){
 });
 }
 
-
+//fetch movies based on category
 
 function requestMovies(category) {
   fetch(`/RATEFLIXWEB/user/backend/fetchmovies.php?category=${encodeURIComponent(category)}`)
-    .then((response) => response.json())
+    .then((response) => {
+        if (!response.ok) throw new Error('Network response error');
+        return response.json();
+    })
     .then((data) => {
       console.log("Movies:", data);
 
@@ -123,16 +129,16 @@ function requestMovies(category) {
             "block bg-gray-900 text-white rounded-lg overflow-hidden shadow-lg hover:scale-105 transition transform";
 
           card.innerHTML = `
-            <div class="w-full h-80 bg-black flex items-center justify-center">
+            <div class="w-full aspect-[2/3] bg-black overflow-hidden">
               <img 
-                src="${movie.Poster !== 'N/A' ? movie.Poster : '/rateflixweb/images/placeholder.jpg'}"
-                alt="${movie.Title}"
-                class="max-h-full max-w-full object-contain"
+                src="${movie.poster}"
+                alt="${movie.title}"
+                class="w-full h-full object-cover"
               >
             </div>
             <div class="p-3">
-              <h3 class="text-lg font-semibold">${movie.Title}</h3>
-              <p class="text-sm text-gray-300">${movie.Year}</p>
+              <h3 class="text-lg font-semibold">${movie.title}</h3>
+              <p class="text-sm text-gray-300">${movie.release_date}</p>
             </div>
           `;
 
@@ -144,5 +150,5 @@ function requestMovies(category) {
         document.querySelector('main').appendChild(movieSection);
       }
     })
-    .catch((err) => console.error(err));
+    .catch((err) => console.error('Movies error:', err));
 }

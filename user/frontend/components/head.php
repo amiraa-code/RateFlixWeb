@@ -1,6 +1,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<meta name="description" content="RateFlix - Rate and review your favorite movies" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="/RATEFLIXWEB/user/frontend/style.css">

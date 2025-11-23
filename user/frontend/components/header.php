@@ -1,31 +1,94 @@
-<header class="fixed top-0 left-0 right-0 z-50 bg-primary text-white shadow-lg">
-<div class="flex items-center justify-between px-6 h-20 w-full">
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 
-<a href="/RATEFLIXWEB/user/frontend/index.php" class="flex items-center gap-2">
-    <img src="/RATEFLIXWEB/images/logo.svg" class="h-16 w-auto" alt="RateFlix Logo">
-    
-</a>
+<header class="fixed top-0 left-0 right-0 z-50 bg-primary text-white shadow-md">
+    <div class="flex items-center justify-between px-6 h-16 w-full">
 
-<form class="flex items-center bg-white rounded-md overflow-hidden shadow netflix">
-    <input 
-    type="search" 
-    placeholder="Search..."
-    class="px-4 py-2 text-gray-700 outline-none w-56"
-    />
-    <button 
-    type="submit" 
-    class="px-4 py-2 bg-accent text-white font-semibold hover:bg-accent/90"
-    >
-    Search
-    </button>
-</form>
+        <!-- Logo  -->
+        <a href="/RATEFLIXWEB/user/frontend/index.php" class="flex items-center">
+            <img src="/RATEFLIXWEB/images/logo.svg" class="h-16 w-auto" alt="RateFlix Logo">
+        </a>
 
-<div class="flex items-center gap-6 text-2xl">
-    <i class="fa-solid fa-arrow-right-to-bracket hover:text-secondary"></i>
-    <i class="fa-solid fa-user-plus hover:text-secondary"></i>
-    <i class="fa-solid fa-right-from-bracket hover:text-secondary"></i>
+        <!-- Search -hide on mobile- -->
+        <form class="hidden md:flex items-center bg-white rounded-md overflow-hidden shadow">
+            <input 
+                type="search" 
+                placeholder="Search..."
+                class="px-4 py-2 text-gray-700 outline-none w-56"
+            />
+            <button 
+                type="submit" 
+                class="px-4 py-2 bg-accent text-white font-semibold hover:bg-accent/90"
+            >
+                Search
+            </button>
+        </form>
+
+        <!-- User Section -->
+    <div class="flex items-center gap-6 text-xl">
+    <?php if (!isset($_SESSION['user_id'])): ?>
+        <!-- LOGIN -->
+        <a href="/RATEFLIXWEB/user/frontend/login.php" 
+        class="relative group cursor-pointer">
+            <i class="fa-solid fa-right-to-bracket hover:text-accent transition"></i>
+
+            <span class="absolute left-1/2 -translate-x-1/2 top-8
+                bg-slate-800 text-white text-sm px-2 py-1 rounded
+                opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100
+                pointer-events-none transition-all duration-200
+                whitespace-nowrap shadow-lg">
+                Login
+            </span>
+        </a>
+
+        <!-- REGISTER -->
+        <a href="/RATEFLIXWEB/user/frontend/register.php" 
+        class="relative group cursor-pointer">
+            <i class="fa-solid fa-user-plus hover:text-accent transition"></i>
+
+            <span class="absolute left-1/2 -translate-x-1/2 top-8
+                bg-slate-800 text-white text-sm px-2 py-1 rounded
+                opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100
+                pointer-events-none transition-all duration-200
+                whitespace-nowrap shadow-lg">
+                Register
+            </span>
+        </a>
+
+    <?php else: ?>
+
+        <div class="flex items-center gap-2 text-base">
+            <i class="fa-solid fa-user-check text-accent"></i>
+            <span class="font-medium">
+                Oh Hey! <?= htmlspecialchars($_SESSION['username']); ?>
+            </span>
+        </div>
+
+        <!-- LOGOUT -->
+        <a id="logoutBtn"
+        class="relative group hover:text-accent transition cursor-pointer">
+
+        <i class="fa-solid fa-right-from-bracket"></i>
+
+        <span class="absolute left-1/2 -translate-x-1/2 top-8
+            bg-slate-800 text-white text-sm px-2 py-1 rounded
+            opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100
+            pointer-events-none transition-all duration-200
+            whitespace-nowrap shadow-lg">
+            Logout
+        </span>
+        </a>
+
+
+
+    <?php endif; ?>
+
 </div>
 </div>
 
-<div class="navigation bg-primaryLight h-14 flex items-center justify-center w-full"></div>
+    <!-- Categories by JS -->
+    <nav class="navigation bg-primaryLight h-12 flex items-center justify-center w-full"></nav>
 </header>

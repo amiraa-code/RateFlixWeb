@@ -1,39 +1,43 @@
-<?php
+<?php 
 header('Content-Type: application/json; charset=utf-8');
-
 require './include/db.php';
 
-$omdbApiKey = '25882367';
-function jsonError($msg, $code = 400) {
-    http_response_code($code);
-    echo json_encode(['error' => $msg]);
+if (!isset($_GET['category'])) {
+    echo json_encode(['status' => 'error', 'message' => 'No category provided']);
     exit;
 }
 
-if (empty($omdbApiKey)) {
-    jsonError('OMDb API key not configured.');
-}
-if (!isset($conn) || !$conn) {
-    jsonError('Database connection failed.');
-}
+$category = $_GET['category'];
 
-// functionaluty
-if (!isset($_GET['category'])) {
-    jsonError('No category provided.');
-}
+// get category_id
+$stmt = $conn->prepare("SELECT category_id FROM categories WHERE category_name = ?");
+$stmt->bind_param("s", $category);
+$stmt->execute();
+$result = $stmt->get_result()->fetch_assoc();
 
-$category = urlencode($_GET['category']);
-$url = "https://www.omdbapi.com/?apikey=$omdbApiKey&s=$category&type=movie";
-
-$response = file_get_contents($url);
-if (!$response) {
-    jsonError('Failed to reach OMDb API.');
+if (!$result) {
+    echo json_encode(['status' => 'error', 'message' => 'Category not found']);
+    exit;
 }
 
-$data = json_decode($response, true);
+$category_id = $result['category_id'];
 
-if (isset($data['Response']) && $data['Response'] === 'True') {
-    echo json_encode(['status' => 'ok', 'movies' => $data['Search']]);
-} else {
-    jsonError('No movies found for this category.');
-}
+// get movies from DB
+$sql = $conn->prepare("
+SELECT 
+    imdbID,
+    title,
+    poster,
+    release_date
+FROM movies
+WHERE category_id = ?
+");
+$sql->bind_param("i", $category_id);
+$sql->execute();
+$movies = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
+
+echo json_encode([
+    'status' => 'ok',
+    'movies' => $movies
+]);
+exit;
