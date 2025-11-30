@@ -2,6 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+// Build return URL - just the relative path with query string
+$return_to = $_SERVER['REQUEST_URI'] ?? '/RATEFLIXWEB/user/frontend/index.php';
 ?>
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-primary text-white shadow-md">
@@ -12,12 +14,26 @@ if (session_status() === PHP_SESSION_NONE) {
             <img src="/RATEFLIXWEB/images/logo.svg" class="h-16 w-auto" alt="RateFlix Logo">
         </a>
 
-        <!-- Search -hide on mobile- -->
-        <form class="hidden md:flex items-center bg-white rounded-md overflow-hidden shadow">
+        <!-- Search - hide on mobile -->
+        <form id="searchForm" class="hidden md:flex items-center bg-white rounded-md overflow-hidden shadow">
             <input 
                 type="search" 
-                placeholder="Search..."
-                class="px-4 py-2 text-gray-700 outline-none w-56"
+                name="title"
+                id="searchInput"
+                placeholder="Title..."
+                class="px-4 py-2 text-gray-700 outline-none w-40"
+                autocomplete="off"
+            />
+            <select name="category" id="searchCategory" class="px-2 py-2 text-gray-700 bg-white border-l border-gray-300 outline-none">
+                <option value="">All Categories</option>
+            </select>
+            <input 
+                type="number" 
+                name="year"
+                id="searchYear"
+                placeholder="Year"
+                min="1900" max="2099"
+                class="px-2 py-2 text-gray-700 bg-white border-l border-gray-300 outline-none w-20"
             />
             <button 
                 type="submit" 
@@ -27,11 +43,13 @@ if (session_status() === PHP_SESSION_NONE) {
             </button>
         </form>
 
+
+
         <!-- User Section -->
     <div class="flex items-center gap-6 text-xl">
     <?php if (!isset($_SESSION['user_id'])): ?>
         <!-- LOGIN -->
-        <a href="/RATEFLIXWEB/user/frontend/login.php" 
+        <a href="/RATEFLIXWEB/user/frontend/login.php?return_to=<?php echo urlencode($return_to); ?>" 
         class="relative group cursor-pointer">
             <i class="fa-solid fa-right-to-bracket hover:text-accent transition"></i>
 
@@ -45,7 +63,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </a>
 
         <!-- REGISTER -->
-        <a href="/RATEFLIXWEB/user/frontend/register.php" 
+        <a href="/RATEFLIXWEB/user/frontend/register.php?return_to=<?php echo urlencode($return_to); ?>" 
         class="relative group cursor-pointer">
             <i class="fa-solid fa-user-plus hover:text-accent transition"></i>
 

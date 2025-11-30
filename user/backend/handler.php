@@ -12,6 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
    exit();
 }
 
+$cache_file = __DIR__ . '/../../cache/categories.json';
+$cache_time = 600; // 10 minutes
+if (file_exists($cache_file) && (time() - filemtime($cache_file) < $cache_time)) {
+   readfile($cache_file);
+   exit();
+}
+
 try {
    // Use prepared statement to prevent SQL injection
    $stmt = $conn->prepare("SELECT category_name FROM categories ORDER BY category_name ASC");
@@ -34,11 +41,14 @@ try {
    $stmt->close();
    
    http_response_code(200);
-   echo json_encode([
+   $response = [
       'status' => 'ok',
       'categories' => $categories,
       'count' => count($categories)
-   ]);
+   ];
+   file_put_contents($cache_file, json_encode($response));
+   echo json_encode($response);
+   exit();
    
 } catch (Exception $e) {
    http_response_code(500);

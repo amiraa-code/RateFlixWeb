@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="/RATEFLIXWEB/user/frontend/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3f1d1d",
+                        primaryLight: "#6b3535",
+                        accent: "#d14b4b",
+                        secondary: "#e2b6b6",
+                    },
+                    boxShadow: {
+                        netflix: "0 0 30px rgba(209, 75, 75, 0.5)",
+                    }
+                }
+            }
+        }
+        </script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+    {% include 'header.twig' %}
+    <main class="flex-1 pt-28 flex items-center justify-center px-4">
+        <div class="bg-slate-800 p-8 rounded-xl w-full max-w-md shadow-lg border border-slate-700">
+            <h1 class="text-3xl font-bold mb-6 text-center">Login</h1>
+            {% if errors is not empty %}
+                <div class="mb-4 bg-red-500/20 border border-red-400 text-red-200 text-sm p-3 rounded">
+                    {% for e in errors %}
+                        <p>{{ e|e }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form method="POST" class="space-y-4">
+                <input type="hidden" name="return_to" value="{{ referrer|e }}">
+                <div>
+                    <label class="block mb-1 text-sm font-medium">Username</label>
+                    <input type="text" name="username" class="w-full px-3 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent" value="{{ username|e }}">
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium">Password</label>
+                    <input type="password" name="password" class="w-full px-3 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent">
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" name="remember" class="w-4 h-4 rounded cursor-pointer">
+                    <label for="remember" class="ml-2 text-sm text-gray-300 cursor-pointer">Remember me for 30 days</label>
+                </div>
+                <button type="submit" class="w-full mt-2 bg-accent py-3 rounded-lg font-bold hover:bg-accent/80 transition">Login</button>
+            </form>
+            <p class="mt-4 text-sm text-gray-400 text-center">
+                Don't have an account?
+                <a href="register.php?return_to={{ referrer|url_encode }}" class="text-accent hover:underline">Create one</a>
+            </p>
+        </div>
+    </main>
+    {% include 'footer.twig' %}
+</body>
+</html>

@@ -32,7 +32,7 @@ if (!preg_match('/^tt\d{7,8}$/', $imdbID)) {
 try {
     $stmt = $conn->prepare("
         SELECT r.review_id, r.user_id, r.rating, r.review_text, r.created_at,
-               u.username
+        u.username
         FROM reviews r
         JOIN users u ON r.user_id = u.user_id
         WHERE r.imdbID = ? AND r.is_hidden = 0
