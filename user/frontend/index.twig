@@ -1,0 +1,21 @@
+{% extends 'base.twig' %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<main class="pt-40 md:pt-28">
+  <!-- Banner -->
+  <section class="banner w-full overflow-hidden">
+    <div class="swiper w-full">
+      <div class="swiper-wrapper"></div>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="global.js"></script>
+{% endblock %}

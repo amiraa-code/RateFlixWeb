@@ -1,0 +1,99 @@
+{% extends 'base.twig' %}
+
+{% block title %}Register - RateFlix{% endblock %}
+
+{% block content %}
+<main class="flex-1 pt-36 pb-8 flex items-center justify-center px-4">
+    <div class="bg-slate-800 p-8 rounded-xl w-full max-w-md shadow-lg border border-slate-700">
+        <h1 class="text-3xl font-bold mb-6 text-center">Create Account</h1>
+        
+        {% if errors is not empty %}
+            <div class="mb-4 bg-red-500/20 border border-red-400 text-red-200 text-sm p-3 rounded">
+                {% for e in errors %}
+                    <p>{{ e|e }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if captcha_errors is not empty %}
+            <div class="mb-4 bg-yellow-500/20 border border-yellow-400 text-yellow-200 text-sm p-3 rounded">
+                {% for e in captcha_errors %}
+                    <p>{{ e|e }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form method="POST" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token|e }}">
+            <input type="hidden" name="return_to" value="{{ return_to|e }}">
+            
+            <div>
+                <label class="block mb-1 text-sm font-medium">Username</label>
+                <input type="text" name="username" class="w-full px-3 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent" value="{{ form_username|e }}" required>
+            </div>
+            
+            <div>
+                <label class="block mb-1 text-sm font-medium">Email</label>
+                <input type="email" name="email" class="w-full px-3 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent" value="{{ form_email|e }}" required>
+            </div>
+            
+            <div>
+                <label class="block mb-1 text-sm font-medium">Password</label>
+                <input type="password" name="password" class="w-full px-3 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent" required>
+                <p class="text-xs text-gray-400 mt-1">Minimum 6 characters</p>
+            </div>
+            
+            <div>
+                <label class="block mb-1 text-sm font-medium">Confirm Password</label>
+                <input type="password" name="confirm_password" class="w-full px-3 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent" required>
+            </div>
+            
+            <div class="mb-4 flex flex-col items-center">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Captcha: Click the <span class="font-bold text-accent">{{ prompt_key|title }}</span></label>
+                <div class="flex gap-4 justify-center mb-2">
+                    {% for k in keys %}
+                        <label style="cursor:pointer; font-size:2.5rem;">
+                            <input type="radio" name="captcha_selected" value="{{ k }}" style="display:none;" {% if selected_captcha == k %}checked{% endif %}>
+                            <span class="inline-block w-16 h-16 rounded border-2 border-slate-700 hover:border-accent transition flex items-center justify-center text-4xl bg-slate-900">{{ emojis[k] }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full mt-2 bg-accent py-3 rounded-lg font-bold hover:bg-accent/80 transition">Create Account</button>
+        </form>
+        
+        <p class="mt-4 text-sm text-gray-400 text-center">
+            Already have an account?
+            <a href="login.php?return_to={{ return_to|url_encode }}" class="text-accent hover:underline">Sign in</a>
+        </p>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Radio button captcha selection handling
+document.addEventListener('DOMContentLoaded', function() {
+    const radioButtons = document.querySelectorAll('input[name="captcha_selected"]');
+    
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Remove previous selections
+            radioButtons.forEach(r => {
+                const span = r.nextElementSibling;
+                span.style.borderColor = '#475569';
+                span.style.backgroundColor = '#0f172a';
+            });
+            
+            // Highlight selected
+            if (this.checked) {
+                const span = this.nextElementSibling;
+                span.style.borderColor = '#f59e0b';
+                span.style.backgroundColor = '#1e293b';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

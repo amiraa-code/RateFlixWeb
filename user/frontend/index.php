@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+session_start();
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
 
-<?php include "./components/head.php"; ?>
-
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
-
-<?php include "./components/header.php"; ?>
-
-<main class="pt-40 md:pt-28">
-
-  <!-- Banner -->
-  <section class="banner w-full overflow-hidden">
-    <div class="swiper w-full">
-      <div class="swiper-wrapper"></div>
-    </div>
-  </section>
-
-</main>
-
-<?php include "./components/footer.php"; ?>
-
-<script src="global.js"></script>
-</body>
-</html>
+$twig = require __DIR__ . '/twig_init.php';
+$twig->display('index.twig', [
+  'username' => isset($_SESSION['username']) ? $_SESSION['username'] : '',
+  'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+  'return_to' => '/RATEFLIXWEB/user/frontend/index.php'
+]);
+?>

@@ -1,0 +1,24 @@
+{% extends 'base.twig' %}
+
+{% block title %}Search Movies - RateFlix{% endblock %}
+
+{% block content %}
+<main class="flex-1 pt-28 px-4">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center">Search Movies</h1>
+        <form id="searchForm" class="flex flex-col md:flex-row gap-4 mb-8">
+            <input type="text" id="searchInput" name="title" placeholder="Title..." class="flex-1 px-4 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent">
+            <select id="searchCategory" name="category" class="px-4 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent">
+                <option value="">All Categories</option>
+            </select>
+            <input type="number" id="searchYear" name="year" placeholder="Year" min="1900" max="2099" class="px-4 py-2 rounded bg-slate-900 border border-slate-700 focus:outline-none focus:border-accent w-28">
+            <button type="submit" class="bg-accent text-white px-6 py-2 rounded font-bold hover:bg-accent/80 transition">Search</button>
+        </form>
+        <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/RATEFLIXWEB/user/frontend/global.js"></script>
+{% endblock %}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="{% block meta_description %}RateFlix - Rate and review your favorite movies{% endblock %}">
+    <title>{% block title %}RateFlix{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/RATEFLIXWEB/user/frontend/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    {% block extra_head %}{% endblock %}
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3f1d1d",
+            primaryLight: "#6b3535",
+            accent: "#d14b4b",
+            secondary: "#e2b6b6",
+          },
+          boxShadow: {
+            netflix: "0 0 30px rgba(209, 75, 75, 0.5)",
+          }
+        }
+      }
+    }
+    </script>
+    <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+{% include 'header.twig' %}
+
+{% block content %}
+<!-- Page content goes here -->
+{% endblock %}
+
+<!-- Logout Modal -->
+<div id="logoutModal" class="fixed inset-0 bg-black/60 hidden justify-center items-center z-50">
+    <div class="bg-slate-800 p-6 rounded-xl w-80 text-center shadow-xl">
+        <h2 class="text-xl font-bold mb-4 text-white">Logout?</h2>
+        <p class="text-gray-300 mb-6">Are you sure you want to leave?</p>
+        <div class="flex gap-4 justify-center">
+            <button id="cancelLogout" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-500 transition font-semibold">
+                No, Wait!
+            </button>
+            <a href="/RATEFLIXWEB/user/frontend/logout.php" class="px-4 py-2 bg-accent text-white rounded hover:bg-accent/80 transition font-semibold">
+                Yes, Done Rating!
+            </a>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.twig' %}
+
+<!-- Base logout modal handler -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutModal = document.getElementById("logoutModal");
+    const cancelLogout = document.getElementById("cancelLogout");
+
+    if (logoutBtn && logoutModal && cancelLogout) {
+        logoutBtn.addEventListener("click", () => {
+            logoutModal.classList.remove("hidden");
+            logoutModal.classList.add("flex");
+        });
+
+        cancelLogout.addEventListener("click", () => {
+            logoutModal.classList.add("hidden");
+            logoutModal.classList.remove("flex");
+        });
+    }
+});
+</script>
+</body>
+</html>
