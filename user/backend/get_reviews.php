@@ -24,14 +24,15 @@ if (!isset($_GET['imdbID'])) {
 
 $imdbID = trim($_GET['imdbID']);
 
-// Validate imdbID format (IMDb IDs are typically tt followed by digits)
+// Validate imdbID format if it has tt
+
 if (!preg_match('/^tt\d{7,8}$/', $imdbID)) {
     jsonError('Invalid movie ID format.');
 }
 
 try {
     $stmt = $conn->prepare("
-        SELECT r.review_id, r.user_id, r.rating, r.review_text, r.created_at,
+        SELECT r.review_id, r.user_id, r.rating, r.review_text, r.created_at, r.updated_at,
         u.username
         FROM reviews r
         JOIN users u ON r.user_id = u.user_id
@@ -60,13 +61,23 @@ try {
             continue; // Skip invalid ratings
         }
 
+        // Check if review was edited (updated_at different from created_at)
+        $createdTime = strtotime($row['created_at']);
+        $updatedTime = strtotime($row['updated_at']);
+        $wasEdited = ($updatedTime > $createdTime + 10); // 10 seconds tolerance for initial save
+        
+        // Debug: Log the timestamps for testing
+        error_log("Review ID: {$row['review_id']}, Created: {$row['created_at']}, Updated: {$row['updated_at']}, Was Edited: " . ($wasEdited ? 'true' : 'false'));
+
         $reviews[] = [
             'review_id'   => (int)$row['review_id'],
             'user_id'     => (int)$row['user_id'],
             'rating'      => $rating,
             'review_text' => htmlspecialchars($row['review_text'], ENT_QUOTES, 'UTF-8'),
             'created_at'  => $row['created_at'],
+            'updated_at'  => $row['updated_at'],
             'username'    => htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8'),
+            'was_edited'  => $wasEdited
         ];
     }
 

@@ -1,8 +1,13 @@
 <?php
+require_once 'security_headers.php';
+// require_once 'error_handler.php'; // Temporarily disabled
 session_start();
-header('X-Content-Type-Options: nosniff');
-header('X-Frame-Options: DENY');
 require_once "../backend/include/db.php"; 
+
+// Generate CSRF token
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 $errors = [];
 $referrer = $_GET['return_to'] ?? $_GET['referrer'] ?? $_SERVER['HTTP_REFERER'] ?? 'index.php';
@@ -25,7 +30,6 @@ if (empty($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
     }
 }
 
-
 // Sanitize referrer to prevent open redirect
 if (!preg_match('~^https?://~i', $referrer)) {
     $referrer = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $referrer;
@@ -38,9 +42,13 @@ if (!filter_var($referrer, FILTER_VALIDATE_URL)) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = trim($_POST["username"] ?? '');
-    $password = trim($_POST["password"] ?? '');
-    $posted_referrer = $_POST["return_to"] ?? $referrer;
+    // CSRF Token Validation
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        $errors[] = "Invalid request. Please try again.";
+    } else {
+        $username = trim($_POST["username"] ?? '');
+        $password = trim($_POST["password"] ?? '');
+        $posted_referrer = $_POST["return_to"] ?? $referrer;
 
     // Re-validate posted referrer
     if (!preg_match('~^https?://~i', $posted_referrer)) {
@@ -100,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->close();
         }
     }
+    } // Close CSRF validation block
 }
 
 // If user is already logged in, redirect to return_to page
@@ -118,7 +127,6 @@ if (!empty($_SESSION['user_id'])) {
     exit;
 }
 
-
 $twig = require __DIR__ . '/twig_init.php';
 $twig->display('login.twig', [
     'errors' => $errors,
@@ -127,6 +135,7 @@ $twig->display('login.twig', [
     'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
     // For header.twig login/register links
     'return_to' => $referrer,
+    'csrf_token' => $_SESSION['csrf_token'],
     // For login form value
     'form_username' => isset($username) ? $username : ''
 ]);

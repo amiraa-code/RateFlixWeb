@@ -1,7 +1,7 @@
 //where rquest will be made
 document.addEventListener('DOMContentLoaded', requestCategories)
 document.addEventListener('DOMContentLoaded', requestBanner)
-document.addEventListener('DOMContentLoaded', () => requestMovies('Horror'));
+document.addEventListener('DOMContentLoaded', () => requestMovies('Comedy'));
 function requestCategories(){
     //API
     fetch('/RATEFLIXWEB/user/backend/handler.php', {
@@ -186,7 +186,7 @@ searchForm.addEventListener("submit", function(e) {
 // live search (title only)
 searchInput.addEventListener("keyup", () => {
   clearTimeout(typingTimer);
-  typingTimer = setTimeout(doSearch, 400); // debounce
+  typingTimer = setTimeout(doSearch, 400); // debounce secs before search loads
 });
 
 function doSearch() {
@@ -196,7 +196,7 @@ function doSearch() {
 
   // Build query string
   const params = [];
-  if (title) params.push(`title=${encodeURIComponent(title)}`);
+  if (title) params.push(`title=${encodeURIComponent(title)}`); //format the string to be sent over url
   if (category) params.push(`category=${encodeURIComponent(category)}`);
   if (year) params.push(`year=${encodeURIComponent(year)}`);
   if (params.length === 0) return;
@@ -231,7 +231,6 @@ function doSearch() {
           card.href = `/RATEFLIXWEB/user/frontend/movie.php?imdbID=${movie.imdbID}`;
           card.className =
             "block bg-gray-900 text-white rounded-lg overflow-hidden shadow-lg hover:scale-105 transition";
-
           card.innerHTML = `
             <div class=\"w-full h-80 bg-black flex items-center justify-center\">
               <img 

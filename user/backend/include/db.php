@@ -1,5 +1,9 @@
 <?php
-// Database connectiion
+// Database connection with error handling
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
 $host = "localhost";
 $user = "root";
 $pass = "";
