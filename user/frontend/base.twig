@@ -63,6 +63,14 @@
 
 {% include 'footer.twig' %}
 
+{% block javascript_vars %}
+<!-- JavaScript variables can be defined here -->
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Additional scripts can be added here -->
+{% endblock %}
+
 <!-- Base logout modal handler -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
