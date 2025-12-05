@@ -141,8 +141,6 @@ function requestMovies(category) {
               <p class="text-sm text-gray-300">${movie.release_date}</p>
             </div>
           `;
-
-
           grid.appendChild(card);
         });
 

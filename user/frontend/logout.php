@@ -29,6 +29,5 @@ if (ini_get("session.use_cookies")) {
 
 // Clear remember-me cookie
 setcookie('remember_token', '', time() - 42000, '/', '', true, true);
-
 header("Location: index.php");
 exit;
